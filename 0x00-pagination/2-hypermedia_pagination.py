@@ -48,3 +48,17 @@ class Server:
         except IndexError:
             data = []
         return data
+
+    def get_hyper(self, page: int = 1, page_size: int = 10) -> dict:
+        ''' hypermedia '''
+        data = self.get_page(page, page_size)
+        dataset = self.dataset()
+        total_pages = ((len(dataset) - 1) // page_size) + 1
+
+        return {'page_size': len(data),
+                'page': page,
+                'data': data,
+                'next_page': None if (page >= total_pages) else page + 1,
+                'prev_page': None if (page - 1 == 0) else page - 1,
+                'total_pages': total_pages
+                }
