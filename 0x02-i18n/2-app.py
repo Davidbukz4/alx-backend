@@ -24,6 +24,7 @@ def index():
     ''' welcome page '''
     return render_template('1-index.html')
 
+
 @babel.localeselector
 def get_locale():
     ''' Get locale from request '''
