@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""Mock logging in
-"""
-from flask import Flask, g, render_template, request
+'''
+Mock logging in
+'''
+from flask import Flask, render_template, request, g
 from flask_babel import Babel
 
 
 class Config:
-    """Representation of babel locale config
-    """
+    ''' Babel configuration '''
     LANGUAGES = ['en', 'fr']
     BABEL_DEFAULT_LOCALE = 'en'
     BABEL_DEFAULT_TIMEZONE = 'UTC'
@@ -29,41 +29,32 @@ users = {
 
 @babel.localeselector
 def get_locale():
-    """Get locale from client request
-    """
+    ''' Get locale from request '''
     locale = request.args.get('locale', '')
-
     if locale and locale in app.config['LANGUAGES']:
         return locale
     return request.accept_languages.best_match(app.config['LANGUAGES'])
 
 
-# babel.init_app(app, locale_selector=get_locale)
-
-
 def get_user():
-    """Get user by ID passed through URL
-    """
-    login_id = request.args.get("login_as")
-
-    if login_id:
-        return users.get(int(login_id))
+    ''' gets user by id '''
+    user_id = request.args.get('login_as')
+    if user_id:
+        return users.get(int(user_id))
     return None
 
 
 @app.before_request
 def before_request():
-    """Run before request
-    """
+    ''' execute before other functions '''
     g.user = get_user()
 
 
 @app.route('/')
-def login():
-    """Say hello world
-    """
+def index():
+    ''' welcome page '''
     return render_template('5-index.html')
 
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port="5000")
+if __name__ == '__main__':
+    app.run(debug=True)
